@@ -1,0 +1,43 @@
+{
+  "name": "fullstack-sample",
+  "version": "1.0.0",
+  "license": "MIT",
+  "scripts": {
+    "before-start": "yarn && mkdir -p dist/api && touch dist/api/index.js",
+    "start": "yarn run before-start && concurrently npm:start:*",
+    "start:api-watch": "parcel watch --no-hmr --target api api/index.ts",
+    "start:api-serve": "node-dev --respawn dist/api",
+    "start:app": "parcel watch --target app app/index.html",
+    "build": "concurrently npm:build:*",
+    "build:api": "parcel build --target api api/index.ts",
+    "build:app": "parcel build --target app app/index.html"
+  },
+  "targets": {
+    "api": {
+      "context": "node",
+      "includeNodeModules": true
+    },
+    "app": {
+      "context": "browser"
+    }
+  },
+  "dependencies": {
+    "babel-polyfill": "6.26.0",
+    "express": "4.17.1",
+    "react": "17.0.2",
+    "react-dom": "17.0.2",
+    "tslib": "2.3.0"
+  },
+  "devDependencies": {
+    "@types/express": "4.17.13",
+    "@types/node": "16.4.0",
+    "@types/react": "17.0.14",
+    "@types/react-dom": "17.0.9",
+    "@types/webpack-env": "1.16.2",
+    "concurrently": "6.2.0",
+    "node-dev": "7.0.0",
+    "parcel": "2.0.0-beta.3.1",
+    "ts-node": "10.1.0",
+    "typescript": "4.3.5"
+  }
+}
