@@ -1,0 +1,11 @@
+{
+  "type": "postgres",
+  "database": "db",
+  "synchronize": true,
+  "logging": false,
+  "entities": ["api/entity/**/*.ts"],
+  "migrations": ["api/migration/**/*.ts"],
+  "cli": {
+    "migrationsDir": "api/migration"
+  }
+}
