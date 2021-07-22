@@ -1,7 +1,4 @@
 import express from 'express'
-import { connectToDb } from './db'
-
-connectToDb()
 
 const router = express.Router()
 
