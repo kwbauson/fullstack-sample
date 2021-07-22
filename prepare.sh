@@ -9,5 +9,8 @@ yarn
 touch dist/api/index.js
 
 if [[ ! -e $PGDATA ]];then
-  initdb
+  initdb --username test --pwfile <(echo test)
+  pg_ctl -o "-k '$PGDATA'" -D "$PGDATA" start
+  createdb -h "$PGDATA" test -U test
+  pg_ctl -o "-k '$PGDATA'" -D "$PGDATA" stop
 fi

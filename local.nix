@@ -33,7 +33,7 @@ in
       yarn
       ln -sf $(${source}/nle-pinned.sh result)/share/prisma/* "$engines"
     fi
-    ./node_modules/.bin/prisma "$@"
+    exec ./node_modules/.bin/prisma "$@"
   '')
   (appimageTools.wrapType2 {
     name = "prisma-studio";
