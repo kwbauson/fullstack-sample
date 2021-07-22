@@ -4,21 +4,31 @@
   "license": "MIT",
   "scripts": {
     "start": "./prepare.sh && concurrently -k yarn:start:*",
-    "start:api-watch": "tsc --watch --preserveWatchOutput",
+    "start:api-watch": "parcel watch --no-hmr --target api api/index.ts",
     "start:api-serve": "node-dev --respawn dist/api",
-    "start:app": "parcel watch app/index.html",
+    "start:app": "parcel watch --target app app/index.html",
     "start:db": "postgres -k \"$PGDATA\"",
     "build": "concurrently -k yarn:build:*",
-    "build:api": "tsc --build",
-    "build:app": "parcel build app/index.html"
+    "build:api": "parcel build --target api api/index.ts",
+    "build:app": "parcel build --target app app/index.html"
+  },
+  "targets": {
+    "api": {
+      "context": "node",
+      "includeNodeModules": {
+        "pg-native": false
+      }
+    },
+    "app": {
+      "context": "browser"
+    }
   },
   "dependencies": {
     "babel-polyfill": "6.26.0",
     "express": "4.17.1",
-    "pg": "8.6.0",
+    "pg": "^8.6.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
-    "reflect-metadata": "0.1.13",
     "tslib": "2.3.0",
     "typeorm": "0.2.34"
   },
@@ -31,6 +41,7 @@
     "concurrently": "6.2.0",
     "node-dev": "7.0.0",
     "parcel": "2.0.0-beta.3.1",
+    "ts-node": "10.1.0",
     "typescript": "4.3.5"
   }
 }
