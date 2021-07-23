@@ -28,16 +28,15 @@ const ApiView = ({ path }: { path: string }) => {
   )
 }
 
-const LookMaAUser = () => {
-  const user: User = {
-    id: 1,
-    name: 'Colton Nerd',
-    email: 'colton@nerd.com',
-  }
+const QueryUser = () => {
+  const [value, setValue] = useState('')
   return (
     <>
-      Look ma, a user!
-      <pre>{JSON.stringify(user)}</pre>
+      <br />
+      <p>
+        User Id <input value={value} onChange={e => setValue(e.target.value)} />
+      </p>
+      <ApiView path={`/api/users/${value}`} />
     </>
   )
 }
@@ -56,6 +55,6 @@ export const App = () => (
     <ApiView path="/api/random" />
     <ApiView path="/api/users" />
     <ApiView path="/api/create-random-user" />
-    <LookMaAUser />
+    <QueryUser />
   </>
 )
