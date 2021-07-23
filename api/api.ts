@@ -27,14 +27,16 @@ router.get('/users', async (_req, res) => {
 })
 
 router.get('/users/:id', async (req, res) => {
-  const user = await prisma.user.findUnique({where: {
-    id: Number(req.params.id)
-  }})
+  const user = await prisma.user.findUnique({
+    where: {
+      id: Number(req.params.id),
+    },
+  })
   res.json(user)
 })
 
 router.post<User[]>('/users', async (req, res) => {
-  await prisma.user.createMany({ data: req.params })
+  await prisma.user.createMany({ data: req.body })
   res.json('success!')
 })
 
