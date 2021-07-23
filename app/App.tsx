@@ -28,34 +28,35 @@ const ApiView = ({ path }: { path: string }) => {
   )
 }
 
-const LookMaAUser = () => {
-  const user: User = {
-    id: 1,
-    name: 'Colton Nerd',
-    email: 'colton@nerd.com',
-  }
+const QueryUser = () => {
+  const [value, setValue] = useState('')
   return (
     <>
-      Look ma, a user!
-      <pre>{JSON.stringify(user)}</pre>
+      <br />
+      <p>
+        User Id <input value={value} onChange={e => setValue(e.target.value)} />
+      </p>
+      <ApiView path={`/api/users/${value}`} />
     </>
   )
 }
 
-export const App = () => (
-  <>
-    <p>hello from app</p>
-    <p>
-      you can use this counter to test react hmr. changing text shouldn't reset
-      the counter
-    </p>
-    <Counter />
-    <hr />
-    <ApiView path="/api/hello" />
-    <ApiView path="/api/now" />
-    <ApiView path="/api/random" />
-    <ApiView path="/api/users" />
-    <ApiView path="/api/create-random-user" />
-    <LookMaAUser />
-  </>
-)
+export const App = () => {
+  return (
+    <>
+      <p>hello from app</p>
+      <p>
+        you can use this counter to test react hmr. changing text shouldn't
+        reset the counter
+      </p>
+      <Counter />
+      <hr />
+      <ApiView path="/api/hello" />
+      <ApiView path="/api/now" />
+      <ApiView path="/api/random" />
+      <ApiView path="/api/users" />
+      <ApiView path="/api/create-random-user" />
+      <QueryUser />
+    </>
+  )
+}
