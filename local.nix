@@ -1,45 +1,38 @@
 scope: with scope;
 let
-  mkPrisma = { name, sha256 }: stdenv.mkDerivation rec {
-    pname = name;
+  # updated from https://github.com/prisma/prisma/issues/3026#issuecomment-862817292
+  prisma-engines = pkgs.rustPlatform.buildRustPackage rec {
+    pname = "prisma-engines";
     version = "cdba6ec525e0213cce26f8e4bb23cf556d1479bb";
-    src = fetchurl {
-      url = "https://binaries.prisma.sh/all_commits/${version}/linux-musl/${name}.gz";
-      inherit sha256;
+    # https://github.com/sfackler/rust-openssl/blob/master/openssl/src/lib.rs#L55-L62
+    OPENSSL_NO_VENDOR = "1";
+    OPENSSL_LIB_DIR = "${pkgs.openssl.out}/lib";
+    OPENSSL_INCLUDE_DIR = "${pkgs.openssl.dev}/include";
+    # https://github.com/danburkert/prost/blob/32ad5a2e1036a9c9425f0a84f032ba9f343b133e/prost-build/build.rs#L1-L15
+    PROTOC = "${pkgs.protobuf}/bin/protoc";
+    PROTOC_INCLUDE = "${pkgs.protobuf}/include";
+    src = pkgs.fetchFromGitHub {
+      owner = "prisma";
+      repo = pname;
+      rev = version;
+      sha256 = "dtkLt1NPboTsvdXM/kcArUrjhVqIohZrr+plwy5gpdk=";
     };
-    dontUnpack = true;
-    nativeBuildInputs = [ gzip ];
-    buildInputs = [ openssl ];
-    installPhase = ''
-      mkdir -p $out/share/prisma
-      cd $out/share/prisma
-      cp $src ${name}-linux-nixos.gz
-      gunzip *
-      chmod +x *
-    '';
+    buildInputs = with pkgs; [ protobuf zlib.dev ] ++ lib.optionals stdenv.isDarwin
+      (with darwin.apple_sdk.frameworks; [ CoreFoundation libiconv Security System ]);
+    doCheck = false; # would otherwise need to start actual postgresql server on installation
+    cargoSha256 = "5pckCjRfBH8QVXxnZ8f6TxALG7C9ZrAd0Y6j+bl+BYY=";
   };
 in
 [
   nodejs
   yarn
   postgresql
-  (mkPrisma { name = "query-engine"; sha256 = "087rzx1gzzzmbsbcq0dczwipm2jwrnfyj9qjbh2s3cdd8111dxna"; })
-  (mkPrisma { name = "migration-engine"; sha256 = "00ssvz0g1cba75c46z388k99763qzkm477vk8swwb2qijpw7sdy3"; })
-  (mkPrisma { name = "prisma-fmt"; sha256 = "1z4pmly8lyb8m273cxkv6f74zx5pwqi2ycgn194nqh9lscmmxkq3"; })
-  (mkPrisma { name = "introspection-engine"; sha256 = "1jkk1pgx659125m519c42dqrvmvlbs7lw47v64yacfd9v4n7jb7n"; })
+  prisma-engines
   (writeBashBin "prisma" ''
-    engines=${source}/node_modules/@prisma/engines
-    if [[ ! -e $engines/prisma-fmt-linux-nixos ]];then
-      yarn
-      ln -sf $(${source}/nle-pinned.sh result)/share/prisma/* "$engines"
-    fi
-    exec ./node_modules/.bin/prisma "$@"
+    export PRISMA_MIGRATION_ENGINE_BINARY="${prisma-engines}/bin/migration-engine"
+    export PRISMA_QUERY_ENGINE_BINARY="${prisma-engines}/bin/query-engine"
+    export PRISMA_INTROSPECTION_ENGINE_BINARY="${prisma-engines}/bin/introspection-engine"
+    export PRISMA_FMT_BINARY="${prisma-engines}/bin/prisma-fmt"
+    exec ${source}/node_modules/.bin/prisma "$@"
   '')
-  (appimageTools.wrapType2 {
-    name = "prisma-studio";
-    src = fetchurl {
-      url = "https://github.com/prisma/studio/releases/download/v0.415.0/Prisma-Studio.AppImage";
-      sha256 = "151pcd0aw6vlb42bw3myfr7xdd5m35wahii5zsvngrz1ydzf84w8";
-    };
-  })
 ]

@@ -4,22 +4,13 @@
   "license": "MIT",
   "scripts": {
     "start": "./prepare.sh && concurrently yarn:start:*",
-    "start:api-watch": "parcel watch --no-hmr --target api api/index.ts",
-    "start:api-serve": "node-dev --respawn dist/api",
-    "start:app": "parcel watch --target app app/index.html",
+    "start:api-watch": "tsc --watch --preserveWatchOutput",
+    "start:api-serve": "node-dev --respawn dist/api/index.js",
+    "start:app": "parcel watch app/index.html",
     "start:db": "postgres -k \"$PGDATA\"",
     "build": "concurrently yarn:build:*",
-    "build:api": "parcel build --target api api/index.ts",
-    "build:app": "parcel build --target app app/index.html"
-  },
-  "targets": {
-    "api": {
-      "context": "node",
-      "includeNodeModules": true
-    },
-    "app": {
-      "context": "browser"
-    }
+    "build:api": "tsc --build",
+    "build:app": "parcel build app/index.html"
   },
   "dependencies": {
     "@prisma/client": "2.27.0",

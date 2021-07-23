@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import type { User } from '@prisma/client'
 
 const Counter = () => {
   const [count, setCount] = useState(0)
@@ -27,6 +28,20 @@ const ApiView = ({ path }: { path: string }) => {
   )
 }
 
+const LookMaAUser = () => {
+  const user: User = {
+    id: 1,
+    name: 'Colton Nerd',
+    email: 'colton@nerd.com',
+  }
+  return (
+    <>
+      Look ma, a user!
+      <pre>{JSON.stringify(user)}</pre>
+    </>
+  )
+}
+
 export const App = () => (
   <>
     <p>hello from app</p>
@@ -39,5 +54,8 @@ export const App = () => (
     <ApiView path="/api/hello" />
     <ApiView path="/api/now" />
     <ApiView path="/api/random" />
+    <ApiView path="/api/users" />
+    <ApiView path="/api/create-random-user" />
+    <LookMaAUser />
   </>
 )

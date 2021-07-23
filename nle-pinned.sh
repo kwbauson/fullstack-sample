@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 set -e
-rev=674da62391d2306578f118052fd9d6535c387230
+rev=650b11934ec808bb5c973983cee88855be41c71f
 result=~/.cache/nle/.pinned/$rev
 url=https://github.com/kwbauson/cfg/archive/$rev.tar.gz
 local_nix_conf=$(dirname "$0")/nix/nix.conf

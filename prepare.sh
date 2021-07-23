@@ -12,5 +12,6 @@ if [[ ! -e $PGDATA ]];then
   initdb --username test --pwfile <(echo test)
   pg_ctl -o "-k '$PGDATA'" -D "$PGDATA" start
   createdb -h "$PGDATA" test -U test
+  prisma db push
   pg_ctl -o "-k '$PGDATA'" -D "$PGDATA" stop
 fi
