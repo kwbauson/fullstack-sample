@@ -24,8 +24,8 @@ let
   };
 in
 [
-  nodejs
-  yarn
+  nodejs_latest
+  (yarn.override { nodejs = nodejs_latest; })
   postgresql
   prisma-engines
   (writeBashBin "prisma" ''
