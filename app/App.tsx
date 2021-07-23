@@ -41,22 +41,20 @@ const QueryUser = () => {
   )
 }
 
-export const App = () => {
-  return (
-    <>
-      <p>hello from app</p>
-      <p>
-        you can use this counter to test react hmr. changing text shouldn't
-        reset the counter
-      </p>
-      <Counter />
-      <hr />
-      <ApiView path="/api/hello" />
-      <ApiView path="/api/now" />
-      <ApiView path="/api/random" />
-      <ApiView path="/api/users" />
-      <ApiView path="/api/create-random-user" />
-      <QueryUser />
-    </>
-  )
-}
+export const App = () => (
+  <>
+    <p>hello from app</p>
+    <p>
+      you can use this counter to test react hmr. changing text shouldn't reset
+      the counter
+    </p>
+    <Counter />
+    <hr />
+    <ApiView path="/api/hello" />
+    <ApiView path="/api/now" />
+    <ApiView path="/api/random" />
+    <ApiView path="/api/users" />
+    <ApiView path="/api/create-random-user" />
+    <QueryUser />
+  </>
+)
